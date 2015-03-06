@@ -6,6 +6,11 @@
   <name>ES MR Integration</name>
   <packaging>jar</packaging>
   <dependencies>
+    	<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1</version>
+		</dependency>
   	<dependency>
   		<groupId>org.apache.hadoop</groupId>
   		<artifactId>hadoop-client</artifactId>
@@ -38,12 +43,11 @@
   <build>
     <plugins>
 
-            <plugin>
+            <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.3</version>
                 <configuration>
-                    <!-- put your configurations here -->
     <filters>
         <filter>
             <artifact>*:*</artifact>
@@ -63,7 +67,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin-->
 
 
     <!--plugin>

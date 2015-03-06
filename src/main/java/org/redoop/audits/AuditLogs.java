@@ -157,8 +157,8 @@ public class AuditLogs {
 		Configuration conf = new Configuration();
 		//conf.setBoolean("mapreduce.map.speculative", false);    
 		//conf.setBoolean("mapreduce.reduce.speculative", false);
-		conf.set("es.nodes", "slave1.rolmo:9200");
-		conf.set("es.resource", "sample1/product");
+		conf.set("es.nodes", "22.0.6.34:9200");
+		conf.set("es.resource", "negocio/{delivery}");
 		
 		Job job = Job.getInstance(conf, "Audit Logs Eclipse (Logins) ElasticSearch");
 		job.setJarByClass(org.redoop.audits.AuditLogs.class);

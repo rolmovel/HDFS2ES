@@ -9,6 +9,10 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
+
 
 public class AuditLogsESMapper extends Mapper <LongWritable, Text, LongWritable, MapWritable> {
 	private static Logger log = LoggerFactory.getLogger(AuditLogsESMapper.class);
@@ -34,13 +38,28 @@ public class AuditLogsESMapper extends Mapper <LongWritable, Text, LongWritable,
 
 			log.info("Starting Map Job");
 			String line = value.toString();
-	        String field[] = line.split(",");
+	        //String field[] = line.split(",");
 			//String type = fields[1].split("=")[1];
+  	  		JSONParser parser = new JSONParser();
 			
 			// create the MapWritable object
 			MapWritable doc = new MapWritable();
+
+    			Object obj = parser.parse(line);
+    			
+    			JSONObject jsonObject = (JSONObject) obj;
+    			System.out.println(obj);
+    			String message = (String) jsonObject.get("message");
+    			JSONObject extraData = (JSONObject) jsonObject.get("extraData");
+    			doc.put(new Text("message"),new Text(message));
+    			doc.put(new Text("ciid"),new Text((String)extraData.get("ciid")));
+    			doc.put(new Text("item"),new Text((String)extraData.get("item")));
+    			doc.put(new Text("hostname"),new Text((String)extraData.get("hostname")));
+    			doc.put(new Text("delivery"),new Text((String)extraData.get("delivery")));
+    			doc.put(new Text("timestamp"),new Text(transformDate(message.substring(4, 16), "MMM dd hh:mm", "yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
+    			doc.put(new Text("vdc"),new  Text((String)extraData.get("vdc")));
 			   
-				
+				/*
 				doc.put(new Text("transaction_date"), new Text(transformDate(field[0], "d/M/yy H:mm", "yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
 				doc.put(new Text("product"), new Text(field[1]));
 				doc.put(new Text("price"), new Text(field[2]));
@@ -53,7 +72,7 @@ public class AuditLogsESMapper extends Mapper <LongWritable, Text, LongWritable,
 				doc.put(new Text("last_login"), new Text(field[9]));
 				doc.put(new Text("latitude"), new Text(field[10]));
 				doc.put(new Text("longitude"), new Text(field[11]));
-			
+				*/
 				context.write(key, doc);
 		
 
